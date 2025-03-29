@@ -1,6 +1,6 @@
 let nameKey = [];
 let numberValue = [];
-let index = 0; // Initialize index to 0
+let index = 0;
 
 document.getElementById("addObjectButton").addEventListener("click", () => {
     const statsParentDiv = document.getElementById("statsParentDiv");
@@ -24,49 +24,61 @@ document.getElementById("addObjectButton").addEventListener("click", () => {
     statsChildDivText.textContent = input;
     
     const statsChildDivInput = document.createElement("input");
-    statsChildDivInput.id = `input-${index}`; // Unique ID for input  
+    statsChildDivInput.id = `input-${index}`;
     statsChildDivInput.placeholder = "Enter Value";
-    statsChildDivInput.classList.add("stats-input"); // Class for event delegation
+    statsChildDivInput.classList.add("stats-input"); 
+    statsChildDivInput.dataset.index = index;
 
-    nameKey.push(input);
+    nameKey.push(index);
     numberValue.push(0);
 
     statsChildDiv.appendChild(statsChildDivText);
     statsChildDiv.appendChild(statsChildDivInput);
     statsParentDiv.appendChild(statsChildDiv);
 
-    console.log("Added:", input);
+    console.log("Added:", index, ", AKA:", input);
 
     inputField.value = "";
-    index++; // Increment index after adding  
+    index++;
 });
-
-// Use event delegation to handle dynamically created input fields  
+ 
 document.getElementById("statsParentDiv").addEventListener("change", function(event) {
-    if (event.target.tagName === "INPUT") {
-        console.log("Final value after focus loss:", event.target.value);
-        if (event.target.classList.contains("stats-input")) {
-            const parentDiv = event.target.parentElement;
-            const label = parentDiv.querySelector("p").textContent; // Get associated label  
-            console.log(`Input changed for "${label}":`, event.target.value);
-            updateBars();
+    if (event.target.classList.contains("stats-input")) {
+        const inputElement = event.target;
+        const inputValue = event.target.value;
+        const inputIndex = parseInt(inputElement.dataset.index, 10); // Retrieve correct index
+
+        console.log(`Input changed for "${inputElement.previousSibling.textContent}":`, inputValue);
+        
+
+        const valueIndex = nameKey.indexOf(inputIndex);
+        if (valueIndex !== -1) {
+            numberValue[valueIndex] = inputValue;
         }
+
+        updateBars();
     }
 });
-
 function updateBars() {
     const content = document.getElementById("content");
-    content.innerHTML = ""; // Clear previous bars  
-    let position = 0;
+    content.innerHTML = "";
+
     for (let i = 0; i < nameKey.length; i++) {
         const sectionBar = document.createElement("div");
         sectionBar.className = "section-bar";
-        sectionBar.style.left = position + "px";
-        sectionBar.style.width = "50px"; // Set a width for visualization  
-        sectionBar.style.height = "20px"; // Set a height for visualization  
-        sectionBar.style.backgroundColor = "blue"; // Set a color for visualization 
-         
         content.appendChild(sectionBar);
-        position += 100; // Adjust spacing between bars  
+
+        for (let k = 0; k < numberValue[i]; k++) {
+            const barUnit = document.createElement("div");
+            barUnit.className = "bar-unit";
+
+            if (k === numberValue[i] - 1) {
+                barUnit.style.borderTopLeftRadius = "10px";
+                barUnit.style.borderTopRightRadius = "10px";
+            }
+
+            sectionBar.appendChild(barUnit);
+        }
     }
 }
+
