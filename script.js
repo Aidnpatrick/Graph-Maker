@@ -1,6 +1,11 @@
 let nameKey = [];
 let numberValue = [];
+let colors = [];
 let index = 0;
+
+function getRandomColor() {
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
+}
 
 document.getElementById("addObjectButton").addEventListener("click", () => {
     const statsParentDiv = document.getElementById("statsParentDiv");
@@ -31,6 +36,7 @@ document.getElementById("addObjectButton").addEventListener("click", () => {
 
     nameKey.push(index);
     numberValue.push(0);
+    colors.push(getRandomColor());
 
     statsChildDiv.appendChild(statsChildDivText);
     statsChildDiv.appendChild(statsChildDivInput);
@@ -42,6 +48,22 @@ document.getElementById("addObjectButton").addEventListener("click", () => {
     index++;
 });
  
+document.getElementById("deleteButton").addEventListener("click", () => {
+    if (nameKey.length > 0) {
+        nameKey.pop();
+        numberValue.pop();
+        colors.pop();
+
+        const statsParentDiv = document.getElementById("statsParentDiv");
+        if (statsParentDiv.lastChild) {
+            statsParentDiv.removeChild(statsParentDiv.lastChild);
+        }
+
+        updateBars();
+    }
+});
+
+
 document.getElementById("statsParentDiv").addEventListener("change", function(event) {
     if (event.target.classList.contains("stats-input")) {
         const inputElement = event.target;
@@ -59,6 +81,8 @@ document.getElementById("statsParentDiv").addEventListener("change", function(ev
         updateBars();
     }
 });
+  
+
 function updateBars() {
     const content = document.getElementById("content");
     content.innerHTML = "";
@@ -67,18 +91,25 @@ function updateBars() {
         const sectionBar = document.createElement("div");
         sectionBar.className = "section-bar";
         content.appendChild(sectionBar);
-
+        
+        let randomColor = colors[i];
         for (let k = 0; k < numberValue[i]; k++) {
             const barUnit = document.createElement("div");
             barUnit.className = "bar-unit";
-
+            barUnit.style.backgroundColor = randomColor;
             if (k === numberValue[i] - 1) {
                 barUnit.style.borderTopLeftRadius = "10px";
                 barUnit.style.borderTopRightRadius = "10px";
+            }
+            if(k === 0) {
+                const text = document.createElement("p");
+                text.className = "bar-text";
+                text.textContent = numberValue[i];
+                barUnit.appendChild(text);
+
             }
 
             sectionBar.appendChild(barUnit);
         }
     }
 }
-

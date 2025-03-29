@@ -7,18 +7,25 @@
   </head>
   <body>
     <nav>
+      <div class="left-nav">
+        <input class="rename-input" placeholder="Name Chart">
+      </div>
       <h1 class="heading">My Graph Maker</h1>
+      <div class="right-nav">
+      </div>
     </nav>
     <div class="flex-row">
       <div class="side-bar" id="statsParentDiv">
           <div class="sub-nav">
             <input class="input-stats" id="inputStats" placeholder="Name New Graph">
 <button class="button" id="addObjectButton">Add Graph</button>
-
+            <button class="delete-button" id="deleteButton">{}</button>
           </div>
+          <br><br><br><br>
       </div>
-      <div class="content" id="content">
-        
+      <div class="flex-column">
+        <div class="content" id="content"></div>
+        <div class="content-text" id="contentText"></div>
       </div>
     </div>
     <script src="script.js"></script>
